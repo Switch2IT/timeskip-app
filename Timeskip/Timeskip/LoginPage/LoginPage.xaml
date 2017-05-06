@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Timeskip.LoginPage.LoginPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0, 20, 0, 0"/>
+    </ContentPage.Padding>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="Small"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <StackLayout VerticalOptions="CenterAndExpand">
+        <Image x:Name="logo"
+               Source="logoJPEG.jpg"/>
+        <StackLayout HorizontalOptions="CenterAndExpand"
+                     Margin="0,10,0,0">
+            <Entry x:Name="userNameEntry"
+                   FontSize="Small"
+                   Placeholder="UserName"
+                   HorizontalTextAlignment="Center"
+                   Text="{Binding UserName}"/>
+        </StackLayout>
+        <StackLayout HorizontalOptions="CenterAndExpand">
+            <Entry IsPassword="True"
+                   x:Name="pwdEntry"
+                   Placeholder="Password"
+                   FontSize="Small"
+                   HorizontalTextAlignment="Center"
+                   Text="{Binding Password}"/>
+        </StackLayout>
+        <Button x:Name="loginButton"
+                Text="Login"
+                HorizontalOptions="Center"
+                Margin="0,40,0,0"
+                Command="{Binding LoginCommand}"/>
+    </StackLayout>
+</ContentPage>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Timeskip.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Button">
+                <Setter Property="TextColor" Value="White"/>
+                <Setter Property="BackgroundColor" Value="#0099e6"/>
+                <Setter Property="WidthRequest" Value="150"/>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="WidthRequest" Value="150"/>
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="WidthRequest" Value="200"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
