@@ -43,6 +43,8 @@
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginPage\LoginService.cs" />
+    <Compile Include="Model\Activity.cs" />
+    <Compile Include="Model\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartPage\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
@@ -50,6 +52,8 @@
     <Compile Include="TSEntryPage\TsEntryPage.xaml.cs">
       <DependentUpon>TsEntryPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="TSEntryPage\ITSService.cs" />
+    <Compile Include="TSEntryPage\TSService.cs" />
     <Compile Include="ViewModel\LoginPageViewModel.cs" />
     <Compile Include="ViewModel\StartPageViewModel.cs" />
     <Compile Include="ViewModel\TimeSheetViewModel.cs" />

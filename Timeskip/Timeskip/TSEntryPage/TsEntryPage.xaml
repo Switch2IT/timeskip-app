@@ -19,7 +19,28 @@
                    VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center"/>
             <DatePicker Date="{Binding Date, Mode=TwoWay}"
-                        HorizontalOptions="Start"/>
+                        HorizontalOptions="Center"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="Center">
+            <Label Text="Project: "
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Medium"/>
+            <Picker ItemsSource="{Binding Projects}"
+                    ItemDisplayBinding="{Binding Name}"
+                    SelectedItem="{Binding SelectedProject}"
+                    HorizontalOptions="StartAndExpand"
+                    x:Name="projectPicker"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="Center">
+            <Label Text="Activity: "
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"/>
+            <Picker ItemsSource="{Binding Activities}"
+                    ItemDisplayBinding="{Binding Name}"
+                    HorizontalOptions="StartAndExpand"/>
         </StackLayout>
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">
@@ -29,8 +50,7 @@
                    VerticalTextAlignment="Center"/>
             <Entry Keyboard="Numeric"
                    HorizontalOptions="Center"
-                   HorizontalTextAlignment="Center"
-                   WidthRequest="100"
+                   HorizontalTextAlignment="Start"
                    Text="{Binding Hours, Mode=TwoWay}"/>
         </StackLayout>
     </StackLayout>
