@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IO.Swagger.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,8 @@ namespace Timeskip.TSEntryPage
 {
     interface ITSService
     {
-        List<Project> AllProjects();
-        List<Activity> Activities(Project project);
+        List<OrganizationResponse> AllOrganisations();
+        List<ProjectResponse> AllProjects();
+        List<Activity> Activities(ProjectResponse project);
     }
 }

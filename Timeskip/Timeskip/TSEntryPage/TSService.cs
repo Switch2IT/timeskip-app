@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IO.Swagger.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,31 +10,27 @@ namespace Timeskip.TSEntryPage
 {
     public class TSService : ITSService
     {
-        List<Project> projects;
         List<Activity> activities;
 
         public TSService()
         {
-            FillProjects();
             FillActivities();
         }
 
-        public List<Activity> Activities(Project project)
+        public List<Activity> Activities(ProjectResponse project)
         {
             if (project != null)
-                return activities.Where(a => a.ProjectId == project.ProjectID).ToList();
+                return activities.Where(a => a.ProjectId == project.Id).ToList();
             else
                 return activities;
         }
 
-        public List<Project> AllProjects() => projects;
 
-        private void FillProjects()
-        {
-            projects = new List<Project>();
-            projects.Add(new Project { ProjectID = 1, Name = "Canguru" });
-            projects.Add(new Project { ProjectID = 2, Name = "Test project" });
-        }
+        //public List<ProjectResponse> AllProjects() => App.OrganisationsApi.ListProjects("canguru");
+        //todo: dummy
+        public List<ProjectResponse> AllProjects() => new List<ProjectResponse>();
+        //end dummy
+        public List<OrganizationResponse> AllOrganisations() => App.OrganisationsApi.ListOrganizations();
 
         private void FillActivities()
         {

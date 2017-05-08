@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using Xamarin.Forms;
+using IO.Swagger.Client;
+using IO.Swagger.Api;
 
 namespace Timeskip
 {
@@ -12,6 +14,11 @@ namespace Timeskip
         public App()
         {
             InitializeComponent();
+
+            ApiClient client = new ApiClient();
+            Configuration config = new Configuration(client);
+
+            OrganisationsApi = new OrganizationsApi(config);
 
             MainPage = new LoginPage.LoginPage();
         }
@@ -30,5 +37,9 @@ namespace Timeskip
         {
             // Handle when your app resumes
         }
+
+        #region App Properties
+        public static OrganizationsApi OrganisationsApi { get; set; }
+        #endregion
     }
 }

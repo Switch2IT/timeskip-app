@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IO.Swagger.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Timeskip.ViewModel
         private DateTime date;
         private int hours;
         private ITSService tsService;
-        private Project selectedProject;
+        private ProjectResponse selectedProject;
         private Activity selectedActivity;
         private List<Activity> activities;
         #endregion
@@ -71,7 +72,7 @@ namespace Timeskip.ViewModel
             }
         }
 
-        public Project SelectedProject
+        public ProjectResponse SelectedProject
         {
             get => selectedProject;
             set
@@ -106,6 +107,7 @@ namespace Timeskip.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public List<Project> Projects => tsService.AllProjects();
+        public List<ProjectResponse> Projects => tsService.AllProjects();
+        public List<OrganizationResponse> Organisations => tsService.AllOrganisations();
     }
 }

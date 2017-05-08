@@ -23,6 +23,17 @@
         </StackLayout>
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">
+            <Label Text="Organisation: "
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Medium"/>
+            <Picker ItemsSource="{Binding Organisations}"
+                    ItemDisplayBinding="{Binding Name}"
+                    Title="Select organisation"
+                    HorizontalOptions="StartAndExpand"/>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="Center">
             <Label Text="Project: "
                    VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center"
@@ -31,16 +42,20 @@
                     ItemDisplayBinding="{Binding Name}"
                     SelectedItem="{Binding SelectedProject}"
                     HorizontalOptions="StartAndExpand"
+                    Title="Select project"
                     x:Name="projectPicker"/>
         </StackLayout>
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">
             <Label Text="Activity: "
                    VerticalTextAlignment="Center"
-                   HorizontalTextAlignment="Center"/>
+                   HorizontalTextAlignment="Center"
+                   FontSize="Medium"/>
             <Picker ItemsSource="{Binding Activities}"
                     ItemDisplayBinding="{Binding Name}"
-                    HorizontalOptions="StartAndExpand"/>
+                    SelectedItem="{Binding SelectedActivity}"
+                    HorizontalOptions="StartAndExpand"
+                    Title="Select activity"/>
         </StackLayout>
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">
