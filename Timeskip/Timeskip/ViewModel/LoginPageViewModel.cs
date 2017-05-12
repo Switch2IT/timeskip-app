@@ -58,10 +58,8 @@ namespace Timeskip.ViewModel
 
         private void Login()
         {
-            if (loginService.Login(username, password))
-                App.Current.MainPage = new NavigationPage(new StartPage.StartPage());
-            else
-                App.Current.MainPage.DisplayAlert("Error", "Username or password incorrect", "Try again");
+            if (!loginService.Login(username, password))
+                App.Current.MainPage.DisplayAlert("Error", "Login error", "Cancel");
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

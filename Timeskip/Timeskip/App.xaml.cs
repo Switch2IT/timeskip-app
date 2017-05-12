@@ -9,11 +9,16 @@ namespace Timeskip
 {
     public partial class App : Application
     {
+        static NavigationPage navigationPage;
+        static string token;
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new LoginPage.LoginPage();
+            navigationPage = new NavigationPage(new StartPage.StartPage());
+
+            MainPage = navigationPage;
         }
 
         protected override void OnStart()
@@ -30,5 +35,13 @@ namespace Timeskip
         {
             // Handle when your app resumes
         }
+
+        public static bool LoggedIn => !string.IsNullOrWhiteSpace(token);
+        public static string Token => token;
+        public static void SaveToken(string _token)
+        {
+            token = _token;
+        }
+        public static Action LoginSuccess => new Action(() => navigationPage.Navigation.PopModalAsync());
     }
 }

@@ -17,5 +17,14 @@ namespace Timeskip.TSEntryPage
             InitializeComponent();
             BindingContext = new TimesheetViewModel();
         }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (!App.LoggedIn)
+            {
+                Navigation.PushModalAsync(new LoginPage.LoginPage());
+            }
+        }
     }
 }
