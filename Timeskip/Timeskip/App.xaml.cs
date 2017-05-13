@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading;
 using Xamarin.Forms;
 
 namespace Timeskip
 {
     public partial class App : Application
     {
+        #region Private shizzle
         static NavigationPage navigationPage;
         static string token;
         static string refreshToken;
+        #endregion
 
         public App()
         {
@@ -37,6 +39,7 @@ namespace Timeskip
             // Handle when your app resumes
         }
 
+        #region Login operations
         public static bool LoggedIn => !string.IsNullOrWhiteSpace(token);
         public static string Token => token;
         public static void SaveToken(string _token)
@@ -49,5 +52,7 @@ namespace Timeskip
             refreshToken = _token;
         }
         public static Action LoginSuccess => new Action(() => navigationPage.Navigation.PopModalAsync());
+
+        #endregion
     }
 }
