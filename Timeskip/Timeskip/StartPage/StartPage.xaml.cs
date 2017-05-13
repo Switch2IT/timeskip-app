@@ -17,5 +17,15 @@ namespace Timeskip.StartPage
             InitializeComponent();
             BindingContext = new StartPageViewModel();
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (!App.LoggedIn)
+            {
+                Navigation.PushModalAsync(new LoginPage.LoginPage());
+            }
+        }
     }
 }

@@ -28,7 +28,8 @@ namespace Timeskip.ViewModel
 
         private void Logout()
         {
-            App.Current.MainPage = new LoginPage.LoginPage();
+            App.SaveToken(null);
+            App.Current.MainPage.Navigation.PushModalAsync(new LoginPage.LoginPage());
         }
     }
 }
