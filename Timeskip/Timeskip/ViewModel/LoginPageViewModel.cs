@@ -58,8 +58,12 @@ namespace Timeskip.ViewModel
 
         private void Login()
         {
-            if (loginService.Login(username, password))
-                App.Current.MainPage.DisplayAlert("", string .Format("{0} logged in", username), "OK");
+            if (string.IsNullOrEmpty(username))
+                Application.Current.MainPage.DisplayAlert("", "Empty username field", "OK");
+            else if (string.IsNullOrEmpty(password))
+                Application.Current.MainPage.DisplayAlert("", "Empty password field", "OK");
+            else if (loginService.Login(username, password))
+                Application.Current.MainPage.DisplayAlert("", string .Format("{0} logged in", username), "OK");
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

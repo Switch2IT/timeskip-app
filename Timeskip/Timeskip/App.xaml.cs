@@ -11,6 +11,7 @@ namespace Timeskip
     {
         static NavigationPage navigationPage;
         static string token;
+        static string refreshToken;
 
         public App()
         {
@@ -41,6 +42,11 @@ namespace Timeskip
         public static void SaveToken(string _token)
         {
             token = _token;
+        }
+        public static string RefreshToken => refreshToken;
+        public static void SaveRefreshToken(string _token)
+        {
+            refreshToken = _token;
         }
         public static Action LoginSuccess => new Action(() => navigationPage.Navigation.PopModalAsync());
     }

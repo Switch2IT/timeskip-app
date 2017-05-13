@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Timeskip.LoginPage
 {
@@ -22,29 +23,30 @@ namespace Timeskip.LoginPage
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    App.Current.MainPage.DisplayAlert("Login Error", "Username or password incorrect", "Cancel");
+                    Application.Current.MainPage.DisplayAlert("Login Error", "Username or password incorrect", "Cancel");
                     return false;
                 }
 
                 string result = response.Content.ReadAsStringAsync().Result;
                 var json = JObject.Parse(result);
                 App.SaveToken(json["access_token"].ToString());
+                App.SaveRefreshToken(json["refresh_token"].ToString());
                 App.LoginSuccess.Invoke();
                 return true;
             }
             catch(AggregateException)
             {
-                App.Current.MainPage.DisplayAlert("Error", "Error when contacting login server", "Cancel");
+                Application.Current.MainPage.DisplayAlert("Error", "Error when contacting login server", "Cancel");
                 return false;
             }
             catch(WebException ex)
             {
-                App.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
+                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
                 return false;
             }
             catch(Exception ex)
             {
-                App.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
+                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
                 return false;
             }
         }
