@@ -58,8 +58,8 @@ namespace Timeskip.ViewModel
 
         private void Login()
         {
-            if (!loginService.Login(username, password))
-                App.Current.MainPage.DisplayAlert("Error", "Login error", "Cancel");
+            if (loginService.Login(username, password))
+                App.Current.MainPage.DisplayAlert("", string .Format("{0} logged in", username), "OK");
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

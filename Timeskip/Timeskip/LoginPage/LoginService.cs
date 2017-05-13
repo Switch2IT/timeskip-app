@@ -9,27 +9,22 @@ using System.Threading.Tasks;
 
 namespace Timeskip.LoginPage
 {
-    //todo: login dummy, wordt vervangen door echte login
     class LoginService : ILoginService
     {
-        private Dictionary<string, string> users;
-
-        public LoginService()
-        {
-            users = new Dictionary<string, string>();
-            FillDummyUsersDB();
-        }
-
         public bool Login(string username, string password)
         {
             try
             {
                 var client = new HttpClient();
                 var content = string.Format("grant_type=password&client_id=timeskip&username={0}&password={1}", username, password);
+                client.Timeout = new TimeSpan(0, 0, 5);
                 var response = client.PostAsync("http://10.3.50.37/auth/realms/canguru/protocol/openid-connect/token", new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded")).Result;
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    App.Current.MainPage.DisplayAlert("Login Error", "Username or password incorrect", "Cancel");
                     return false;
+                }
 
                 string result = response.Content.ReadAsStringAsync().Result;
                 var json = JObject.Parse(result);
@@ -37,18 +32,21 @@ namespace Timeskip.LoginPage
                 App.LoginSuccess.Invoke();
                 return true;
             }
+            catch(AggregateException)
+            {
+                App.Current.MainPage.DisplayAlert("Error", "Error when contacting login server", "Cancel");
+                return false;
+            }
+            catch(WebException ex)
+            {
+                App.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
+                return false;
+            }
             catch(Exception ex)
             {
                 App.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
                 return false;
             }
-        }
-
-        private void FillDummyUsersDB()
-        {
-            users.Add("otje", "banaan");
-            users.Add("obi", "wan");
-            users.Add("jef", "patat");
         }
     }
 }
