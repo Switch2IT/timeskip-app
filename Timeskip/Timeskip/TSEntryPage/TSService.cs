@@ -2,6 +2,7 @@
 using IO.Swagger.Model;
 using System;
 using System.Collections.Generic;
+using Timeskip.API;
 using Xamarin.Forms;
 
 namespace Timeskip.TSEntryPage
@@ -14,7 +15,7 @@ namespace Timeskip.TSEntryPage
             {
                 if (project == null || organization == null)
                     return new List<ActivityResponse>();
-                var response = App.OrganisationsApi.ListProjectActivitiesWithHttpInfo(organization.Id, project.Id);
+                var response = OrgApi.GetOrgApi().ListProjectActivitiesWithHttpInfo(organization.Id, project.Id);
                 if (response.StatusCode == 200)
                     return response.Data;
                 else
@@ -36,7 +37,7 @@ namespace Timeskip.TSEntryPage
             {
                 if (organisation == null)
                     return new List<ProjectResponse>();
-                var response = App.OrganisationsApi.ListProjectsWithHttpInfo(organisation.Id);
+                var response = OrgApi.GetOrgApi().ListProjectsWithHttpInfo(organisation.Id);
                 if (response.StatusCode == 200)
                     return response.Data;
                 else
@@ -53,7 +54,7 @@ namespace Timeskip.TSEntryPage
         {
             try
             {
-                var response = App.OrganisationsApi.ListOrganizationsWithHttpInfo();
+                var response = OrgApi.GetOrgApi().ListOrganizationsWithHttpInfo();
                 if (response.StatusCode == 200)
                     return response.Data;
                 else
