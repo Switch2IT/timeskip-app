@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Timeskip;
 
 namespace Timeskip.Droid
 {
@@ -21,6 +22,13 @@ namespace Timeskip.Droid
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
+        }
+
+        public override void OnBackPressed()
+        {
+            if (!App.LoggedIn) return;
+
+            base.OnBackPressed();
         }
     }
 }
