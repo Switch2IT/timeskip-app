@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Xamarin.Forms;
 using IO.Swagger.Client;
 using IO.Swagger.Api;
@@ -24,6 +20,8 @@ namespace Timeskip
             navigationPage = new NavigationPage(new StartPage.StartPage());
             
             ApiClient client = new ApiClient();
+            client.RestClient.Timeout = 5000;
+            client.RestClient.BaseUrl = new Uri(Timeskip.Properties.Resources.SwaggerUrl);
             Configuration config = new Configuration(client);
 
             OrganisationsApi = new OrganizationsApi(config);
@@ -52,6 +50,7 @@ namespace Timeskip
         public static void SaveToken(string _token)
         {
             token = _token;
+            OrganisationsApi.Configuration.AddDefaultHeader("Authorization", "Bearer " + token);
         }
         public static string RefreshToken => refreshToken;
         public static void SaveRefreshToken(string _token)

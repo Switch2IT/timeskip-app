@@ -28,6 +28,7 @@
                    HorizontalTextAlignment="Center"
                    FontSize="Medium"/>
             <Picker ItemsSource="{Binding Organisations}"
+                    SelectedItem="{Binding SelectedOrganization}"
                     ItemDisplayBinding="{Binding Name}"
                     Title="Select organisation"
                     HorizontalOptions="StartAndExpand"/>

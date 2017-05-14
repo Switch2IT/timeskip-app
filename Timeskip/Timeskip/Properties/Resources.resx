@@ -120,4 +120,7 @@
   <data name="KeyCloakTokenUrl" xml:space="preserve">
     <value>http://10.3.50.37/auth/realms/canguru/protocol/openid-connect/token</value>
   </data>
+  <data name="SwaggerUrl" xml:space="preserve">
+    <value>http://10.3.50.35/timeskip-web/api</value>
+  </data>
 </root>

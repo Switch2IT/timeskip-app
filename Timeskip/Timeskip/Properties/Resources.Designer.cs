@@ -69,5 +69,14 @@ namespace Timeskip.Properties {
                 return ResourceManager.GetString("KeyCloakTokenUrl", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://10.3.50.35/timeskip-web/api.
+        /// </summary>
+        internal static string SwaggerUrl {
+            get {
+                return ResourceManager.GetString("SwaggerUrl", resourceCulture);
+            }
+        }
     }
 }

@@ -2,10 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Timeskip.Model;
 using Timeskip.TSEntryPage;
 
 namespace Timeskip.ViewModel
@@ -19,8 +15,10 @@ namespace Timeskip.ViewModel
         private int hours;
         private ITSService tsService;
         private ProjectResponse selectedProject;
-        private Activity selectedActivity;
-        private List<Activity> activities;
+        private ActivityResponse selectedActivity;
+        private List<ActivityResponse> activities;
+        private OrganizationResponse selectedOrganization;
+        private List<ProjectResponse> projects;
         #endregion
 
         #region Constructor
@@ -59,9 +57,9 @@ namespace Timeskip.ViewModel
             }
         }
 
-        public List<Activity> Activities
+        public List<ActivityResponse> Activities
         {
-            get => activities ?? tsService.Activities(selectedProject);
+            get => activities ?? tsService.Activities(selectedOrganization, selectedProject);
             set
             {
                 if (activities != value)
@@ -81,12 +79,12 @@ namespace Timeskip.ViewModel
                 {
                     selectedProject = value;
                     OnPropertyChanged("SelectedProject");
-                    Activities = tsService.Activities(selectedProject);
+                    Activities = tsService.Activities(selectedOrganization, selectedProject);
                 }
             }
         }
 
-        public Activity SelectedActivity
+        public ActivityResponse SelectedActivity
         {
             get => selectedActivity;
             set
@@ -98,6 +96,35 @@ namespace Timeskip.ViewModel
                 }
             }
         }
+
+        public List<ProjectResponse> Projects
+        {
+            get => projects ?? tsService.AllProjects(selectedOrganization);
+            set
+            {
+                if (projects != value)
+                {
+                    projects = value;
+                    OnPropertyChanged("Projects");
+                }
+            }
+        }
+
+        public OrganizationResponse SelectedOrganization
+        {
+            get => selectedOrganization;
+            set
+            {
+                if (selectedOrganization != value)
+                {
+                    selectedOrganization = value;
+                    OnPropertyChanged("SelectedOrganization");
+                    Projects = tsService.AllProjects(selectedOrganization);
+                }
+            }
+        }
+
+
         #endregion
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -107,7 +134,6 @@ namespace Timeskip.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public List<ProjectResponse> Projects => tsService.AllProjects();
         public List<OrganizationResponse> Organisations => tsService.AllOrganisations();
     }
 }
