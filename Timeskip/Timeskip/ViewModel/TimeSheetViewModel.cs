@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows.Input;
 using Timeskip.TSEntryPage;
+using Xamarin.Forms;
 
 namespace Timeskip.ViewModel
 {
@@ -12,7 +14,7 @@ namespace Timeskip.ViewModel
 
         #region private shizzle
         private DateTime date;
-        private int hours;
+        private decimal hours;
         private ITSService tsService;
         private ProjectResponse selectedProject;
         private ActivityResponse selectedActivity;
@@ -27,6 +29,7 @@ namespace Timeskip.ViewModel
             date = DateTime.Today;
             hours = 8;//todo: wordt nog vervangen door de default uren in de db voor de specifieke dag
             tsService = new TSService();
+            PostTimesheetCommand = new Command(PostTimesheet);
         }
         #endregion
 
@@ -44,7 +47,7 @@ namespace Timeskip.ViewModel
             }
         }
 
-        public int Hours
+        public decimal Hours
         {
             get => hours;
             set
@@ -123,8 +126,6 @@ namespace Timeskip.ViewModel
                 }
             }
         }
-
-
         #endregion
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -135,5 +136,23 @@ namespace Timeskip.ViewModel
         }
 
         public List<OrganizationResponse> Organisations => tsService.AllOrganisations();
+
+        public ICommand PostTimesheetCommand { get; private set; }
+
+        private void PostTimesheet()
+        {
+            try
+            {
+                var minutes = (long)Math.Round(hours * 60, 0);
+                if (tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
+                    Application.Current.MainPage.DisplayAlert("", "Work logged", "OK");
+                else
+                    Application.Current.MainPage.DisplayAlert("Error", "Work not logged", "OK");
+            }
+            catch(Exception ex)
+            {
+                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+            }
+        }
     }
 }

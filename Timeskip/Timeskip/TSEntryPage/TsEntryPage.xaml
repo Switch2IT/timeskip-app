@@ -69,5 +69,10 @@
                    HorizontalTextAlignment="Start"
                    Text="{Binding Hours, Mode=TwoWay}"/>
         </StackLayout>
+        <Button Text="Log work"
+            Command="{Binding PostTimesheetCommand}"
+            HorizontalOptions="Center"
+            VerticalOptions="EndAndExpand"
+            Margin="0,0,0,10"/>
     </StackLayout>
 </ContentPage>
