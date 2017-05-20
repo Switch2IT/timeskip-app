@@ -5,10 +5,12 @@ using System.Globalization;
 using Timeskip.Services.Timesheet;
 using Xamarin.Forms;
 using Timeskip.Tools;
+using System.ComponentModel;
+using System.Windows.Input;
 
 namespace Timeskip.ViewModel
 {
-    public class TSOverviewViewModel
+    public class TSOverviewViewModel : INotifyPropertyChanged
     {
         #region Private shizzle
         private DateTime date;
@@ -16,6 +18,7 @@ namespace Timeskip.ViewModel
         private OrganizationResponse organisation;
         private bool showWorklogList = false, showLabel = true;
         private List<WorklogResponse> worklogList;
+        private WorklogResponse selectedWorklog;
         #endregion
 
         #region Constructor
@@ -25,6 +28,7 @@ namespace Timeskip.ViewModel
             tsService = new TSService();
             this.organisation = organisation;
             FillWorklogList();
+            ViewDetailCommand = new Command(ViewDetail);
         }
         #endregion
 
@@ -33,6 +37,23 @@ namespace Timeskip.ViewModel
         public bool ShowWorklogList => showWorklogList;
         public bool ShowLabel => showLabel;
         public List<WorklogResponse> WorklogList => worklogList;
+        public WorklogResponse SelectedWorklog
+        {
+            get => selectedWorklog;
+            set
+            {
+                if (selectedWorklog != value)
+                {
+                    selectedWorklog = value;
+                    ViewDetailCommand.Execute(selectedWorklog);
+                    OnPropertyChanged("SelectedWorklog");
+                }
+            }
+        }
+        
+        public ICommand ViewDetailCommand { get; private set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
         private List<WorklogResponse> FillWorklogList()
@@ -53,6 +74,18 @@ namespace Timeskip.ViewModel
                 Popup.ShowPopupError(ex.Message);
                 return new List<WorklogResponse>();
             }
+        }
+
+        private void ViewDetail()
+        {
+            Application.Current.MainPage.Navigation.PushAsync(new ViewTimesheets.TimesheetDetailPage(selectedWorklog));
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            var changed = PropertyChanged;
+            if (changed != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -20,6 +20,7 @@
                IsVisible="{Binding ShowLabel}"/>
         <ListView ItemsSource="{Binding WorklogList}"
                   IsVisible="{Binding ShowWorklogList}"
+                  SelectedItem="{Binding SelectedWorklog, Mode=TwoWay}"
                   x:Name="worklogLv">
             <ListView.ItemTemplate>
                 <DataTemplate>

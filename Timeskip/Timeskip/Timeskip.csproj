@@ -67,10 +67,14 @@
     <Compile Include="ViewModel\LoginPageViewModel.cs" />
     <Compile Include="ViewModel\SearchTimesheetViewModel.cs" />
     <Compile Include="ViewModel\StartPageViewModel.cs" />
+    <Compile Include="ViewModel\TimeSheetDetailViewModel.cs" />
     <Compile Include="ViewModel\TimeSheetViewModel.cs" />
     <Compile Include="ViewModel\TSOverviewViewModel.cs" />
     <Compile Include="ViewTimesheets\SearchTimesheet.xaml.cs">
       <DependentUpon>SearchTimesheet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewTimesheets\TimesheetDetailPage.xaml.cs">
+      <DependentUpon>TimesheetDetailPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewTimesheets\TSOverviewPage.xaml.cs">
       <DependentUpon>TSOverviewPage.xaml</DependentUpon>
@@ -137,7 +141,12 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="ViewTimesheets\TimesheetDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ViewTimesheets\SearchTimesheet.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
