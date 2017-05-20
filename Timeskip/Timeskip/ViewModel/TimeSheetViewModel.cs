@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Timeskip.TSEntryPage;
 using Xamarin.Forms;
+using Timeskip.Services.Timesheet;
 
 namespace Timeskip.ViewModel
 {

@@ -1,11 +1,12 @@
 ﻿using IO.Swagger.Client;
 using IO.Swagger.Model;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using Timeskip.API;
 using Xamarin.Forms;
 
-namespace Timeskip.TSEntryPage
+namespace Timeskip.Services.Timesheet
 {
     public class TSService : ITSService
     {
@@ -28,9 +29,6 @@ namespace Timeskip.TSEntryPage
             }
         }
 
-
-        //public List<ProjectResponse> AllProjects() => App.OrganisationsApi.ListProjects("canguru");
-        //todo: dummy
         public List<ProjectResponse> AllProjects(OrganizationResponse organisation)
         {
             try
@@ -45,6 +43,14 @@ namespace Timeskip.TSEntryPage
             }
             catch (ApiException ex)
             {
+                if (ex.ErrorCode == 403)
+                {
+                    var json = JObject.Parse(ex.ErrorContent);
+                    string errorMessage = json["message"];
+                    Application.Current.MainPage.DisplayAlert("Error", errorMessage , "OK");
+                    return new List<ProjectResponse>();
+                }
+
                 Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
                 return new List<ProjectResponse>();
             }

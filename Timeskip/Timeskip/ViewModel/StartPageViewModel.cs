@@ -37,6 +37,7 @@ namespace Timeskip.ViewModel
         private void Logout()
         {
             App.SaveToken(null);
+            App.SaveRefreshToken(null);
             Application.Current.MainPage.Navigation.PushModalAsync(new LoginPage.LoginPage());
         }
         #endregion

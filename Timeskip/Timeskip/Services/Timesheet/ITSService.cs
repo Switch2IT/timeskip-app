@@ -1,7 +1,7 @@
 ﻿using IO.Swagger.Model;
 using System.Collections.Generic;
 
-namespace Timeskip.TSEntryPage
+namespace Timeskip.Services.Timesheet
 {
     interface ITSService
     {

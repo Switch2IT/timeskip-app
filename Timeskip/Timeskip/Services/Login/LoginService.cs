@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Timeskip.LoginPage
+namespace Timeskip.Services.Login
 {
     class LoginService : ILoginService
     {
@@ -86,7 +86,7 @@ namespace Timeskip.LoginPage
             catch (Exception)
             {
                 App.SaveToken(null);
-                App.Current.MainPage.Navigation.PushModalAsync(new LoginPage());
+                Application.Current.MainPage.Navigation.PushModalAsync(new LoginPage.LoginPage());
                 Application.Current.MainPage.DisplayAlert("Error", "Error while refreshing the login token", "Cancel");
             }
         }
