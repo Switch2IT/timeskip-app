@@ -1,11 +1,10 @@
-﻿using System;
+﻿using IO.Swagger.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using Timeskip.Services.Timesheet;
 using Timeskip.ViewTimesheets;
 using Xamarin.Forms;
 
@@ -18,6 +17,8 @@ namespace Timeskip.ViewModel
         private int[] years = new int[5];
         private string month;
         private int year;
+        private ITSService tsService;
+        private OrganizationResponse selectedOrganization;
         #endregion
 
         #region Constructor
@@ -26,6 +27,7 @@ namespace Timeskip.ViewModel
             FillMonths();
             FillYears();
             SearchTimesheetCommand = new Command(SearchTimesheet);
+            tsService = new TSService();
         }
         #endregion
 
@@ -58,6 +60,21 @@ namespace Timeskip.ViewModel
             }
         }
 
+        public List<OrganizationResponse> Organizations => tsService.AllOrganisations();
+
+        public OrganizationResponse SelectedOrganization
+        {
+            get => selectedOrganization;
+            set
+            {
+                if (selectedOrganization != value)
+                {
+                    selectedOrganization = value;
+                    OnPropertyChanged("SelectedOrganization");
+                }
+            }
+        }
+
         public ICommand SearchTimesheetCommand { get; private set; }
 
         public string[] Months => months;
@@ -74,9 +91,9 @@ namespace Timeskip.ViewModel
         #region Command functionality
         private void SearchTimesheet()
         {
-            int monthLocal = DateTime.ParseExact(month, "MMMM", CultureInfo.CurrentCulture).Month;
-            DateTime date = new DateTime(year, monthLocal, DateTime.Now.Day);
-            Application.Current.MainPage.Navigation.PushAsync(new TSOverviewPage(date));
+            int monthLocal = DateTime.ParseExact(Month, "MMMM", CultureInfo.CurrentCulture).Month;
+            DateTime date = new DateTime(Year, monthLocal, DateTime.Now.Day);
+            Application.Current.MainPage.Navigation.PushAsync(new TSOverviewPage(date, selectedOrganization));
         }
         #endregion
 

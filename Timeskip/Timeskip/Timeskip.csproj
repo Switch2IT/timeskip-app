@@ -38,6 +38,7 @@
     <Compile Include="API\ApiConfig.cs" />
     <Compile Include="API\OrgApi.cs" />
     <Compile Include="API\SwaggerClient.cs" />
+    <Compile Include="API\UserApi.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -52,9 +53,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Timesheet\IUserService.cs" />
+    <Compile Include="Services\Timesheet\UserService.cs" />
     <Compile Include="StartPage\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\Popup.cs" />
     <Compile Include="TSEntryPage\TsEntryPage.xaml.cs">
       <DependentUpon>TsEntryPage.xaml</DependentUpon>
     </Compile>

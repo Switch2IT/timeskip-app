@@ -1,12 +1,10 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
+using Timeskip.Tools;
 
 namespace Timeskip.Services.Login
 {
@@ -27,7 +25,7 @@ namespace Timeskip.Services.Login
 
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    Application.Current.MainPage.DisplayAlert("Login Error", "Username or password incorrect", "Cancel");
+                    Popup.ShowPopupError("Login error", "Username or password incorrect");
                     return false;
                 }
 
@@ -52,17 +50,17 @@ namespace Timeskip.Services.Login
             }
             catch (AggregateException)
             {
-                Application.Current.MainPage.DisplayAlert("Error", "Could not connect to login server", "Cancel");
+                Popup.ShowPopupError("Could not connect to login server");
                 return false;
             }
             catch (WebException ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
+                Popup.ShowPopupError(ex.Message);
                 return false;
             }
             catch (Exception ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
+                Popup.ShowPopupError(ex.Message);
                 return false;
             }
         }
@@ -86,8 +84,9 @@ namespace Timeskip.Services.Login
             catch (Exception)
             {
                 App.SaveToken(null);
+                App.SaveRefreshToken(null);
                 Application.Current.MainPage.Navigation.PushModalAsync(new LoginPage.LoginPage());
-                Application.Current.MainPage.DisplayAlert("Error", "Error while refreshing the login token", "Cancel");
+                Popup.ShowPopupError("Error while refreshing the login token");
             }
         }
         #endregion

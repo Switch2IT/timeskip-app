@@ -1,7 +1,5 @@
 ﻿using System;
 using Xamarin.Forms;
-using IO.Swagger.Client;
-using IO.Swagger.Api;
 using Timeskip.API;
 
 namespace Timeskip

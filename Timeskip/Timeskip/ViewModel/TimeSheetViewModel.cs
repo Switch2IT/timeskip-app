@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
-using Timeskip.TSEntryPage;
 using Xamarin.Forms;
 using Timeskip.Services.Timesheet;
+using Timeskip.Tools;
 
 namespace Timeskip.ViewModel
 {
@@ -17,19 +17,22 @@ namespace Timeskip.ViewModel
         private DateTime date;
         private decimal hours;
         private ITSService tsService;
+        private IUserService userService;
         private ProjectResponse selectedProject;
         private ActivityResponse selectedActivity;
         private List<ActivityResponse> activities;
         private OrganizationResponse selectedOrganization;
         private List<ProjectResponse> projects;
+
         #endregion
 
         #region Constructor
         public TimesheetViewModel()
         {
-            date = DateTime.Today;
-            hours = 8;//todo: wordt nog vervangen door de default uren in de db voor de specifieke dag
             tsService = new TSService();
+            userService = new UserService();
+            date = DateTime.Today;
+            Hours = DefaultHours();
             PostTimesheetCommand = new Command(PostTimesheet);
         }
         #endregion
@@ -144,15 +147,36 @@ namespace Timeskip.ViewModel
         {
             try
             {
+                bool valid = true;
+
+                if (selectedProject.AllowOvertime == false && hours > 8)
+                {
+                    valid = false;
+                    Popup.ShowPopupError("No overtime allowed for selected project");
+                    Hours = DefaultHours();
+                }
+
                 var minutes = (long)Math.Round(hours * 60, 0);
-                if (tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
-                    Application.Current.MainPage.DisplayAlert("", "Work logged", "OK");
-                else
-                    Application.Current.MainPage.DisplayAlert("Error", "Work not logged", "OK");
+                if (valid && tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
+                    Popup.ShowPopupSuccess(hours + " logged for project: " + selectedProject);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                Popup.ShowPopupError(ex.Message);
+            }
+        }
+
+        private decimal DefaultHours()
+        {
+            //todo: nog checken of de user op de huidige dag werkt
+            try
+            {
+                return Convert.ToDecimal(userService.CurrentUserInfo().DefaultHoursPerDay);
+            }
+            catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+                return 8;
             }
         }
     }

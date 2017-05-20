@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using Timeskip.API;
 using Xamarin.Forms;
+using Timeskip.Tools;
+using System.Linq;
 
 namespace Timeskip.Services.Timesheet
 {
@@ -24,7 +26,12 @@ namespace Timeskip.Services.Timesheet
             }
             catch (ApiException ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                Popup.ShowPopupError(ex.Message);
+                return new List<ActivityResponse>();
+            }
+            catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
                 return new List<ActivityResponse>();
             }
         }
@@ -47,15 +54,20 @@ namespace Timeskip.Services.Timesheet
                 {
                     var json = JObject.Parse(ex.ErrorContent);
                     string errorMessage = json["message"];
-                    Application.Current.MainPage.DisplayAlert("Error", errorMessage , "OK");
+                    Popup.ShowPopupError(errorMessage);
                     return new List<ProjectResponse>();
                 }
 
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                Popup.ShowPopupError(ex.Message);
+                return new List<ProjectResponse>();
+            }
+            catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
                 return new List<ProjectResponse>();
             }
         }
-        //end dummy
+
         public List<OrganizationResponse> AllOrganisations()
         {
             try
@@ -68,12 +80,12 @@ namespace Timeskip.Services.Timesheet
             }
             catch (ApiException ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                Popup.ShowPopupError(ex.Message);
                 return new List<OrganizationResponse>();
             }
             catch (Exception ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "Cancel");
+                Popup.ShowPopupError(ex.Message);
                 return new List<OrganizationResponse>();
             }
         }
@@ -82,9 +94,9 @@ namespace Timeskip.Services.Timesheet
         {
             try
             {
-                if(project==null || organization==null || activity == null)
+                if (project == null || organization == null || activity == null)
                 {
-                    Application.Current.MainPage.DisplayAlert("Error", "Please fill in all fields", "OK");
+                    Popup.ShowPopupError("Please fill in all the fields");
                     return false;
                 }
                 var response = OrgApi.GetOrgApi().LogWorkForCurrentUserWithHttpInfo(organization.Id, project.Id, activity.Id, new NewWorklogRequest(day, minutes, true));
@@ -93,15 +105,55 @@ namespace Timeskip.Services.Timesheet
                 else
                     throw new ApiException();
             }
-            catch(ApiException ex)
+            catch (ApiException ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                if (ex.ErrorCode == 412)
+                {
+                    var json = JObject.Parse(ex.ErrorContent);
+                    string errorMessage = json["message"];
+                    Popup.ShowPopupError("User not assigned to project: " + errorMessage);
+                    return false;
+                }
+
+                Popup.ShowPopupError(ex.Message);
                 return false;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Application.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+                Popup.ShowPopupError(ex.Message);
                 return false;
+            }
+        }
+
+        public List<WorklogResponse> WorklogsForPeriod(OrganizationResponse organization, DateTime from, DateTime to)
+        {
+            try
+            {
+                List<WorklogResponse> worklogs = new List<WorklogResponse>();
+
+                foreach (var project in AllProjects(organization))
+                {
+                    foreach (var activity in Activities(organization, project))
+                    {
+                        var response = OrgApi.GetOrgApi().ListActivityWorklogsWithHttpInfo(organization.Id, project.Id, activity.Id);
+                        if (response.StatusCode == 201)
+                            worklogs.AddRange(response.Data);
+                        else
+                            throw new ApiException();
+                    }
+                }
+
+                return worklogs.Where(w => w.Day >= from && w.Day <= to && w.UserId == UserApi.GetUserApi().GetCurrentUser().Id).ToList();
+            }
+            catch (ApiException ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+                return new List<WorklogResponse>();
+            }
+            catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+                return new List<WorklogResponse>();
             }
         }
     }

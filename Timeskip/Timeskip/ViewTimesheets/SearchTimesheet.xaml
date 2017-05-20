@@ -35,6 +35,18 @@
                     SelectedItem="{Binding Year}"
                     HorizontalOptions="StartAndExpand"/>
         </StackLayout>
+        <StackLayout Orientation="Horizontal"
+                     HorizontalOptions="Center">
+            <Label Text="Organization: "
+                   FontSize="Medium"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"/>
+            <Picker Title="Organization"
+                    ItemsSource="{Binding Organizations}"
+                    SelectedItem="{Binding SelectedOrganization}"
+                    ItemDisplayBinding="{Binding Name}"
+                    HorizontalOptions="StartAndExpand"/>
+        </StackLayout>
         <Button HorizontalOptions="Center"
                 VerticalOptions="EndAndExpand"
                 Text="Search"
