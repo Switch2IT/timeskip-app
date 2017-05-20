@@ -52,7 +52,7 @@ namespace Timeskip.LoginPage
             }
             catch (AggregateException)
             {
-                Application.Current.MainPage.DisplayAlert("Error", "Error when contacting login server", "Cancel");
+                Application.Current.MainPage.DisplayAlert("Error", "Could not connect to login server", "Cancel");
                 return false;
             }
             catch (WebException ex)
