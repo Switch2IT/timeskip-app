@@ -1,4 +1,5 @@
-﻿using Timeskip.ViewModel;
+﻿using IO.Swagger.Model;
+using Timeskip.ViewModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,6 +12,12 @@ namespace Timeskip.TSEntryPage
         {
             InitializeComponent();
             BindingContext = new TimesheetViewModel();
+        }
+
+        public TsEntryPage(WorklogResponse worklog)
+        {
+            InitializeComponent();
+            BindingContext = new TimesheetViewModel(worklog);
         }
         protected override void OnAppearing()
         {

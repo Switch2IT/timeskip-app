@@ -11,5 +11,6 @@ namespace Timeskip.Services.Timesheet
         List<ActivityResponse> Activities(OrganizationResponse organization, ProjectResponse project);
         bool PostWorklog(OrganizationResponse organization, ProjectResponse project, ActivityResponse activity, long minutes, string day);
         List<WorklogResponse> WorklogsForPeriod(OrganizationResponse organisation, DateTime from, DateTime to);
+        bool UpdateWorklog(WorklogResponse worklog, long loggedMinutes, string day, OrganizationResponse organization, ProjectResponse project, ActivityResponse activity);
     }
 }

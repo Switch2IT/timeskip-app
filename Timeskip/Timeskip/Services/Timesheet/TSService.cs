@@ -125,6 +125,29 @@ namespace Timeskip.Services.Timesheet
             }
         }
 
+        public bool UpdateWorklog(WorklogResponse worklog, long loggedMinutes, string day, OrganizationResponse organization, ProjectResponse project, ActivityResponse activity)
+        {
+            try
+            {
+                var updateWorklogrequest = new UpdateWorklogRequest(worklog.Id, UserApi.GetUserApi().GetCurrentUser().Id, day, loggedMinutes, true);
+                var response = OrgApi.GetOrgApi().UpdateWorklogWithHttpInfo(organization.Id, project.Id, activity.Id, worklog.Id, updateWorklogrequest);
+                if (response.StatusCode == 200)
+                    return true;
+                else
+                    throw new ApiException();
+            }
+            catch(ApiException ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+                return false;
+            }
+            catch(Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+                return false;
+            }
+        }
+
         public List<WorklogResponse> WorklogsForPeriod(OrganizationResponse organization, DateTime from, DateTime to)
         {
             try

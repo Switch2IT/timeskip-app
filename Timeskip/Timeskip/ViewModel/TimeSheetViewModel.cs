@@ -14,7 +14,7 @@ namespace Timeskip.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region private shizzle
-        private DateTime date;
+        private DateTime? date;
         private decimal hours;
         private ITSService tsService;
         private IUserService userService;
@@ -23,7 +23,8 @@ namespace Timeskip.ViewModel
         private List<ActivityResponse> activities;
         private OrganizationResponse selectedOrganization;
         private List<ProjectResponse> projects;
-
+        private bool update = false, post = false;
+        private WorklogResponse worklog;
         #endregion
 
         #region Constructor
@@ -34,11 +35,26 @@ namespace Timeskip.ViewModel
             date = DateTime.Today;
             Hours = DefaultHours();
             PostTimesheetCommand = new Command(PostTimesheet);
+            post = true;
+        }
+
+        public TimesheetViewModel(WorklogResponse worklog)
+        {
+            tsService = new TSService();
+            userService = new UserService();
+            date = worklog.Day;
+            Hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes / 60), 0);
+            UpdateTimesheetCommand = new Command(UpdateTimesheet);
+            update = true;
+            SelectedOrganization = worklog.Activity.Project.Organization;
+            SelectedProject = worklog.Activity.Project;
+            selectedActivity = worklog.Activity;
+            this.worklog = worklog;
         }
         #endregion
 
         #region Properties
-        public DateTime Date
+        public DateTime? Date
         {
             get => date;
             set
@@ -138,29 +154,42 @@ namespace Timeskip.ViewModel
             if (changed != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
+        public bool Update => update;
+        public bool Post => post;
         public List<OrganizationResponse> Organisations => tsService.AllOrganisations();
 
         public ICommand PostTimesheetCommand { get; private set; }
+        public ICommand UpdateTimesheetCommand { get; private set; }
 
         private void PostTimesheet()
         {
             try
             {
-                bool valid = true;
-
-                if (selectedProject.AllowOvertime == false && hours > 8)
-                {
-                    valid = false;
-                    Popup.ShowPopupError("No overtime allowed for selected project");
-                    Hours = DefaultHours();
-                }
+                bool valid = CheckOvertime();
 
                 var minutes = (long)Math.Round(hours * 60, 0);
                 if (valid && tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
                     Popup.ShowPopupSuccess(hours + " logged for project: " + selectedProject);
             }
             catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+            }
+        }
+
+        private void UpdateTimesheet()
+        {
+            try
+            {
+                bool valid = CheckOvertime();
+                var minutes = (long)Math.Round(hours * 60, 0);
+                if (valid && tsService.UpdateWorklog(worklog, minutes, string.Format("{0:yyyy-MM-dd}", date), selectedOrganization, selectedProject, selectedActivity))
+                {
+                    Popup.ShowPopupSuccess("Worklog updated");
+                    Application.Current.MainPage = new NavigationPage(new StartPage.StartPage());
+                }
+            }
+            catch(Exception ex)
             {
                 Popup.ShowPopupError(ex.Message);
             }
@@ -178,6 +207,18 @@ namespace Timeskip.ViewModel
                 Popup.ShowPopupError(ex.Message);
                 return 8;
             }
+        }
+
+        private bool CheckOvertime()
+        {
+            if (selectedProject.AllowOvertime == false && hours > 8)
+            {
+                Popup.ShowPopupError("No overtime allowed for selected project");
+                Hours = DefaultHours();
+                return false;
+            }
+
+            return true;
         }
     }
 }

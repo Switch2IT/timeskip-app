@@ -48,6 +48,7 @@
         </StackLayout>
         <Button HorizontalOptions="Center"
                 Text="Update"
-                VerticalOptions="EndAndExpand"/>
+                VerticalOptions="EndAndExpand"
+                Command="{Binding UpdateTimesheetCommand}"/>
     </StackLayout>
 </ContentPage>
