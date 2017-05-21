@@ -4,7 +4,7 @@
              x:Class="Timeskip.ViewTimesheets.SearchTimesheet">
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
-                    iOS="0, 10, 0, 0"/>
+                    iOS="0, 20, 0, 0"/>
     </ContentPage.Padding>
     <StackLayout HorizontalOptions="Center">
         <Label Text="Search timesheet"
@@ -12,7 +12,8 @@
                HorizontalTextAlignment="Center"
                HorizontalOptions="Center"
                VerticalOptions="StartAndExpand"
-               WidthRequest="200"/>
+               WidthRequest="200"
+               Margin="0, 15, 0, 0"/>
         <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">
             <Label Text="Month: "

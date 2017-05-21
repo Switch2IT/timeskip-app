@@ -18,7 +18,8 @@
         <Label Text="Timesheet Detail"
                HorizontalTextAlignment="Center"
                VerticalOptions="Start"
-               FontSize="Large"/>
+               FontSize="Large"
+               Margin="0, 15, 0, 0"/>
         <StackLayout VerticalOptions="CenterAndExpand">
             <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">

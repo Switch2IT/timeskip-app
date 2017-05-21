@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Timeskip.Services.Timesheet;
 using Timeskip.Tools;
+using Timeskip.API;
 
 namespace Timeskip.ViewModel
 {
@@ -169,7 +170,10 @@ namespace Timeskip.ViewModel
 
                 var minutes = (long)Math.Round(hours * 60, 0);
                 if (valid && tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
-                    Popup.ShowPopupSuccess(hours + " logged for project: " + selectedProject);
+                {
+                    Popup.ShowPopupSuccess(hours + " hours logged for project: " + selectedProject.Name);
+                    Application.Current.MainPage = new NavigationPage(new StartPage.StartPage());
+                }
             }
             catch (Exception ex)
             {
@@ -197,7 +201,6 @@ namespace Timeskip.ViewModel
 
         private decimal DefaultHours()
         {
-            //todo: nog checken of de user op de huidige dag werkt
             try
             {
                 return Convert.ToDecimal(userService.CurrentUserInfo().DefaultHoursPerDay);
