@@ -43,7 +43,7 @@ namespace Timeskip.ViewModel
             tsService = new TSService();
             userService = new UserService();
             date = worklog.Day;
-            Hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes / 60), 0);
+            Hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes) / 60, 2);
             UpdateTimesheetCommand = new Command(UpdateTimesheet);
             update = true;
             SelectedOrganization = worklog.Activity.Project.Organization;
