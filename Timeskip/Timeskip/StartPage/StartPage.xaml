@@ -18,7 +18,8 @@
                 Command="{Binding NewTimesheetCommand}"/>
             <Button x:Name="btnViewTimesheets"
                 Text="Timesheets"
-                HorizontalOptions="Start"/>
+                HorizontalOptions="Start"
+                Command="{Binding ViewTimesheetCommand}"/>
         </StackLayout>
         <StackLayout VerticalOptions="EndAndExpand"
                      HorizontalOptions="Center">

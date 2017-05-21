@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Xamarin.Forms;
+using Timeskip.API;
 
 namespace Timeskip
 {
@@ -45,6 +42,7 @@ namespace Timeskip
         public static void SaveToken(string _token)
         {
             token = _token;
+            OrgApi.AddTokenToHeader(_token);
         }
         public static string RefreshToken => refreshToken;
         public static void SaveRefreshToken(string _token)

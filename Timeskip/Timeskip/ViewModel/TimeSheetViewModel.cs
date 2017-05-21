@@ -1,11 +1,11 @@
-﻿using System;
+﻿using IO.Swagger.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Timeskip.Model;
-using Timeskip.TSEntryPage;
+using System.Windows.Input;
+using Xamarin.Forms;
+using Timeskip.Services.Timesheet;
+using Timeskip.Tools;
 
 namespace Timeskip.ViewModel
 {
@@ -14,25 +14,47 @@ namespace Timeskip.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         #region private shizzle
-        private DateTime date;
-        private int hours;
+        private DateTime? date;
+        private decimal hours;
         private ITSService tsService;
-        private Project selectedProject;
-        private Activity selectedActivity;
-        private List<Activity> activities;
+        private IUserService userService;
+        private ProjectResponse selectedProject;
+        private ActivityResponse selectedActivity;
+        private List<ActivityResponse> activities;
+        private OrganizationResponse selectedOrganization;
+        private List<ProjectResponse> projects;
+        private bool update = false, post = false;
+        private WorklogResponse worklog;
         #endregion
 
         #region Constructor
         public TimesheetViewModel()
         {
-            date = DateTime.Today;
-            hours = 8;//todo: wordt nog vervangen door de default uren in de db voor de specifieke dag
             tsService = new TSService();
+            userService = new UserService();
+            date = DateTime.Today;
+            Hours = DefaultHours();
+            PostTimesheetCommand = new Command(PostTimesheet);
+            post = true;
+        }
+
+        public TimesheetViewModel(WorklogResponse worklog)
+        {
+            tsService = new TSService();
+            userService = new UserService();
+            date = worklog.Day;
+            Hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes / 60), 0);
+            UpdateTimesheetCommand = new Command(UpdateTimesheet);
+            update = true;
+            SelectedOrganization = worklog.Activity.Project.Organization;
+            SelectedProject = worklog.Activity.Project;
+            selectedActivity = worklog.Activity;
+            this.worklog = worklog;
         }
         #endregion
 
         #region Properties
-        public DateTime Date
+        public DateTime? Date
         {
             get => date;
             set
@@ -45,7 +67,7 @@ namespace Timeskip.ViewModel
             }
         }
 
-        public int Hours
+        public decimal Hours
         {
             get => hours;
             set
@@ -58,9 +80,9 @@ namespace Timeskip.ViewModel
             }
         }
 
-        public List<Activity> Activities
+        public List<ActivityResponse> Activities
         {
-            get => activities ?? tsService.Activities(selectedProject);
+            get => activities ?? tsService.Activities(selectedOrganization, selectedProject);
             set
             {
                 if (activities != value)
@@ -71,7 +93,7 @@ namespace Timeskip.ViewModel
             }
         }
 
-        public Project SelectedProject
+        public ProjectResponse SelectedProject
         {
             get => selectedProject;
             set
@@ -80,12 +102,12 @@ namespace Timeskip.ViewModel
                 {
                     selectedProject = value;
                     OnPropertyChanged("SelectedProject");
-                    Activities = tsService.Activities(selectedProject);
+                    Activities = tsService.Activities(selectedOrganization, selectedProject);
                 }
             }
         }
 
-        public Activity SelectedActivity
+        public ActivityResponse SelectedActivity
         {
             get => selectedActivity;
             set
@@ -97,6 +119,33 @@ namespace Timeskip.ViewModel
                 }
             }
         }
+
+        public List<ProjectResponse> Projects
+        {
+            get => projects ?? tsService.AllProjects(selectedOrganization);
+            set
+            {
+                if (projects != value)
+                {
+                    projects = value;
+                    OnPropertyChanged("Projects");
+                }
+            }
+        }
+
+        public OrganizationResponse SelectedOrganization
+        {
+            get => selectedOrganization;
+            set
+            {
+                if (selectedOrganization != value)
+                {
+                    selectedOrganization = value;
+                    OnPropertyChanged("SelectedOrganization");
+                    Projects = tsService.AllProjects(selectedOrganization);
+                }
+            }
+        }
         #endregion
 
         protected virtual void OnPropertyChanged(string propertyName)
@@ -105,7 +154,71 @@ namespace Timeskip.ViewModel
             if (changed != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
+        public bool Update => update;
+        public bool Post => post;
+        public List<OrganizationResponse> Organisations => tsService.AllOrganisations();
 
-        public List<Project> Projects => tsService.AllProjects();
+        public ICommand PostTimesheetCommand { get; private set; }
+        public ICommand UpdateTimesheetCommand { get; private set; }
+
+        private void PostTimesheet()
+        {
+            try
+            {
+                bool valid = CheckOvertime();
+
+                var minutes = (long)Math.Round(hours * 60, 0);
+                if (valid && tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
+                    Popup.ShowPopupSuccess(hours + " logged for project: " + selectedProject);
+            }
+            catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+            }
+        }
+
+        private void UpdateTimesheet()
+        {
+            try
+            {
+                bool valid = CheckOvertime();
+                var minutes = (long)Math.Round(hours * 60, 0);
+                if (valid && tsService.UpdateWorklog(worklog, minutes, string.Format("{0:yyyy-MM-dd}", date), selectedOrganization, selectedProject, selectedActivity))
+                {
+                    Popup.ShowPopupSuccess("Worklog updated");
+                    Application.Current.MainPage = new NavigationPage(new StartPage.StartPage());
+                }
+            }
+            catch(Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+            }
+        }
+
+        private decimal DefaultHours()
+        {
+            //todo: nog checken of de user op de huidige dag werkt
+            try
+            {
+                return Convert.ToDecimal(userService.CurrentUserInfo().DefaultHoursPerDay);
+            }
+            catch (Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+                return 8;
+            }
+        }
+
+        private bool CheckOvertime()
+        {
+            if (selectedProject.AllowOvertime == false && hours > 8)
+            {
+                Popup.ShowPopupError("No overtime allowed for selected project");
+                Hours = DefaultHours();
+                return false;
+            }
+
+            return true;
+        }
     }
 }

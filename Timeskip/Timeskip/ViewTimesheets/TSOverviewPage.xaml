@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Timeskip.ViewTimesheets.TSOverviewPage">
+    <ContentPage.Padding>
+        <OnPlatform x:TypeArguments="Thickness"
+                    iOS="0, 20, 0, 0"/>
+    </ContentPage.Padding>
+    <StackLayout>
+        <Label Text="{Binding Title}"
+               HorizontalOptions="Center"
+               WidthRequest="300"
+               HorizontalTextAlignment="Center"
+               FontSize="Large"
+               VerticalOptions="StartAndExpand"/>
+        <Label Text="No worklogs found for current period"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               VerticalOptions="CenterAndExpand"
+               IsVisible="{Binding ShowLabel}"/>
+        <ListView ItemsSource="{Binding WorklogList}"
+                  IsVisible="{Binding ShowWorklogList}"
+                  SelectedItem="{Binding SelectedWorklog, Mode=TwoWay}"
+                  x:Name="worklogLv">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ViewCell.View>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Day, StringFormat='{0:dd/MM/yyyy}'}" Margin="10, 0, 0, 0" VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Activity.Project.Name}" VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="0" Grid.Column="2" Text="{Binding Activity.Name}" VerticalTextAlignment="Center"/>
+                                <Label Grid.Row="0" Grid.Column="3" Text="{Binding LoggedMinutes}" Margin="0, 0, 10, 0" VerticalTextAlignment="Center"/>
+                            </Grid>
+                        </ViewCell.View>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

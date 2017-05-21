@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows.Input;
-using Timeskip.LoginPage;
 using Xamarin.Forms;
+using Timeskip.Services.Login;
 
 namespace Timeskip.ViewModel
 {

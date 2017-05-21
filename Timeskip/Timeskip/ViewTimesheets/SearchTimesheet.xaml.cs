@@ -2,15 +2,15 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Timeskip.StartPage
+namespace Timeskip.ViewTimesheets
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StartPage : ContentPage
+    public partial class SearchTimesheet : ContentPage
     {
-        public StartPage()
+        public SearchTimesheet()
         {
             InitializeComponent();
-            BindingContext = new StartPageViewModel();
+            BindingContext = new SearchTimesheetViewModel();
         }
 
         protected override void OnAppearing()

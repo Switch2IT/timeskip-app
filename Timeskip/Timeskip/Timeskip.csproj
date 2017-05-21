@@ -35,33 +35,50 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="API\ApiConfig.cs" />
+    <Compile Include="API\OrgApi.cs" />
+    <Compile Include="API\SwaggerClient.cs" />
+    <Compile Include="API\UserApi.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LoginPage\ILoginService.cs" />
+    <Compile Include="Services\Login\ILoginService.cs" />
     <Compile Include="LoginPage\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LoginPage\LoginService.cs" />
-    <Compile Include="Model\Activity.cs" />
-    <Compile Include="Model\Project.cs" />
+    <Compile Include="Services\Login\LoginService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Timesheet\IUserService.cs" />
+    <Compile Include="Services\Timesheet\UserService.cs" />
     <Compile Include="StartPage\StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Tools\Popup.cs" />
     <Compile Include="TSEntryPage\TsEntryPage.xaml.cs">
       <DependentUpon>TsEntryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TSEntryPage\ITSService.cs" />
-    <Compile Include="TSEntryPage\TSService.cs" />
+    <Compile Include="Services\Timesheet\ITSService.cs" />
+    <Compile Include="Services\Timesheet\TSService.cs" />
     <Compile Include="ViewModel\LoginPageViewModel.cs" />
+    <Compile Include="ViewModel\SearchTimesheetViewModel.cs" />
     <Compile Include="ViewModel\StartPageViewModel.cs" />
+    <Compile Include="ViewModel\TimeSheetDetailViewModel.cs" />
     <Compile Include="ViewModel\TimeSheetViewModel.cs" />
+    <Compile Include="ViewModel\TSOverviewViewModel.cs" />
+    <Compile Include="ViewTimesheets\SearchTimesheet.xaml.cs">
+      <DependentUpon>SearchTimesheet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewTimesheets\TimesheetDetailPage.xaml.cs">
+      <DependentUpon>TimesheetDetailPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewTimesheets\TSOverviewPage.xaml.cs">
+      <DependentUpon>TSOverviewPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">
@@ -70,8 +87,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="IO.Swagger">
+      <HintPath>bin\Debug\IO.Swagger.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.10.0.2\lib\portable-net45+win8+wpa81+wp8\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>bin\Debug\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Net.Http.2.2.29\lib\portable-net40+sl4+win8+wp71+wpa81\System.Net.Http.dll</HintPath>
@@ -93,6 +116,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +137,24 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TSEntryPage\TsEntryPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ViewTimesheets\TimesheetDetailPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ViewTimesheets\SearchTimesheet.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ViewTimesheets\TSOverviewPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

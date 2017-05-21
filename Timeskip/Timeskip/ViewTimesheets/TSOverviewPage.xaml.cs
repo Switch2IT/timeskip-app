@@ -1,16 +1,18 @@
-﻿using Timeskip.ViewModel;
+﻿using IO.Swagger.Model;
+using System;
+using Timeskip.ViewModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Timeskip.StartPage
+namespace Timeskip.ViewTimesheets
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class StartPage : ContentPage
+    public partial class TSOverviewPage : ContentPage
     {
-        public StartPage()
+        public TSOverviewPage(DateTime date, OrganizationResponse organization)
         {
             InitializeComponent();
-            BindingContext = new StartPageViewModel();
+            BindingContext = new TSOverviewViewModel(date, organization);
         }
 
         protected override void OnAppearing()

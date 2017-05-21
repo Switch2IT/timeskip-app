@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace Timeskip.ViewModel
@@ -14,22 +9,32 @@ namespace Timeskip.ViewModel
         {
             NewTimesheetCommand = new Command(NewTimesheet);
             LogoutCommand = new Command(Logout);
+            ViewTimesheetCommand = new Command(ViewTimesheet);
         }
 
         #region Properties
         public ICommand NewTimesheetCommand { get; private set; }
         public ICommand LogoutCommand { get; private set; }
+        public ICommand ViewTimesheetCommand { get; private set; }
         #endregion
 
+        #region Button logica
         private void NewTimesheet()
         {
-            App.Current.MainPage.Navigation.PushAsync(new TSEntryPage.TsEntryPage());
+            Application.Current.MainPage.Navigation.PushAsync(new TSEntryPage.TsEntryPage());
+        }
+
+        private void ViewTimesheet()
+        {
+            Application.Current.MainPage.Navigation.PushAsync(new ViewTimesheets.SearchTimesheet());
         }
 
         private void Logout()
         {
             App.SaveToken(null);
-            App.Current.MainPage.Navigation.PushModalAsync(new LoginPage.LoginPage());
+            App.SaveRefreshToken(null);
+            Application.Current.MainPage.Navigation.PushModalAsync(new LoginPage.LoginPage());
         }
+        #endregion
     }
 }
