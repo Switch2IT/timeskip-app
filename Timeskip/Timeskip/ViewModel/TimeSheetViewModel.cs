@@ -44,12 +44,15 @@ namespace Timeskip.ViewModel
             tsService = new TSService();
             userService = new UserService();
             date = worklog.Day;
-            Hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes) / 60, 2);
+            hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes) / 60, 2);
             UpdateTimesheetCommand = new Command(UpdateTimesheet);
             update = true;
-            SelectedOrganization = worklog.Activity.Project.Organization;
-            SelectedProject = worklog.Activity.Project;
-            selectedActivity = worklog.Activity;
+            if (worklog.Activity.Project != null && worklog.Activity.Project.Organization != null)
+            {
+                selectedOrganization = worklog.Activity.Project.Organization;
+                selectedProject = worklog.Activity.Project;
+                selectedActivity = worklog.Activity;
+            }
             this.worklog = worklog;
         }
         #endregion
@@ -193,7 +196,7 @@ namespace Timeskip.ViewModel
                     Application.Current.MainPage = new NavigationPage(new StartPage.StartPage());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Popup.ShowPopupError(ex.Message);
             }
