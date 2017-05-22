@@ -57,7 +57,10 @@ namespace Timeskip.ViewModel
                     Popup.ShowPopupError("Please fill in all fields");
                 else if (confirmTimesheet == "Yes")
                 {
-                    tsService.UpdateWorklog(worklog, worklog.LoggedMinutes, string.Format("{0:yyyy-MM-dd}", worklog.Day), worklog.Activity.Project.Organization, worklog.Activity.Project, worklog.Activity);
+                    worklog.Confirmed = true;
+                    if (tsService.UpdateWorklog(worklog, worklog.LoggedMinutes, string.Format("{0:yyyy-MM-dd}", worklog.Day), worklog.Activity.Project.Organization, worklog.Activity.Project, worklog.Activity))
+                        Popup.ShowPopupSuccess("Worklog confirmed");
+                    
                     await Application.Current.MainPage.Navigation.PopAsync();
                 }
             }
