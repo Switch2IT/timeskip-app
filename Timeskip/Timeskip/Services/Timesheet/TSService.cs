@@ -144,7 +144,7 @@ namespace Timeskip.Services.Timesheet
             }
         }
 
-        public bool UpdateWorklog(WorklogResponse worklog, long loggedMinutes, string day, OrganizationResponse organization, ProjectResponse project, ActivityResponse activity)
+        public bool UpdateWorklog(WorklogResponse worklog, long? loggedMinutes, string day, OrganizationResponse organization, ProjectResponse project, ActivityResponse activity)
         {
             try
             {
