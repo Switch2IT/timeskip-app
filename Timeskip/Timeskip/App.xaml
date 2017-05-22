@@ -7,19 +7,22 @@
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"/>
                 <Setter Property="BackgroundColor" Value="#0099e6"/>
-                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="WidthRequest" Value="200"/>
             </Style>
             <Style TargetType="Label">
-                <Setter Property="WidthRequest" Value="150"/>
+                <Setter Property="WidthRequest" Value="200"/>
             </Style>
             <Style TargetType="Entry">
                 <Setter Property="WidthRequest" Value="200"/>
+                <Setter Property="Margin" Value="0, 5, 5, 5"/>
             </Style>
             <Style TargetType="Picker">
                 <Setter Property="WidthRequest" Value="200"/>
+                <Setter Property="Margin" Value="0, 5, 5, 5"/>
             </Style>
             <Style TargetType="DatePicker">
                 <Setter Property="WidthRequest" Value="200"/>
+                <Setter Property="Margin" Value="0, 5, 5, 5"/>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

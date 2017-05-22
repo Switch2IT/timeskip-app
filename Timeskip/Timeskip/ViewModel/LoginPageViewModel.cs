@@ -2,6 +2,8 @@
 using System.Windows.Input;
 using Xamarin.Forms;
 using Timeskip.Services.Login;
+using Timeskip.Tools;
+using System;
 
 namespace Timeskip.ViewModel
 {
@@ -53,12 +55,19 @@ namespace Timeskip.ViewModel
 
         private void Login()
         {
-            if (string.IsNullOrEmpty(username))
-                Application.Current.MainPage.DisplayAlert("", "Empty username field", "OK");
-            else if (string.IsNullOrEmpty(password))
-                Application.Current.MainPage.DisplayAlert("", "Empty password field", "OK");
-            else if (loginService.Login(username, password))
-                Application.Current.MainPage.DisplayAlert("", string .Format("{0} logged in", username), "OK");
+            try
+            {
+                if (string.IsNullOrEmpty(username))
+                    Popup.ShowPopupError("", "Empty username field");
+                else if (string.IsNullOrEmpty(password))
+                    Popup.ShowPopupError("", "Empty password field");
+                else if (loginService.Login(username, password))
+                    Popup.ShowPopupSuccess("", string.Format("{0} logged in", username), "OK");
+            }
+            catch(Exception ex)
+            {
+                Popup.ShowPopupError(ex.Message);
+            }
         }
 
         protected virtual void OnPropertyChanged(string propertyName)

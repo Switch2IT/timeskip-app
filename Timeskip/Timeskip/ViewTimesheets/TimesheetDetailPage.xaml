@@ -18,8 +18,14 @@
         <Label Text="Timesheet Detail"
                HorizontalTextAlignment="Center"
                VerticalOptions="Start"
-               FontSize="Large"/>
+               FontSize="Large"
+               Margin="0, 15, 0, 0"/>
         <StackLayout VerticalOptions="CenterAndExpand">
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="Center">
+                <Label Text="Date"/>
+                <Label Text="{Binding Date}"/>
+            </StackLayout>
             <StackLayout Orientation="Horizontal"
                      HorizontalOptions="Center">
                 <Label Text="User: "/>
@@ -45,10 +51,22 @@
                 <Label Text="Logged minutes: "/>
                 <Label Text="{Binding WorkLog.LoggedMinutes}"/>
             </StackLayout>
+            <StackLayout Orientation="Horizontal"
+                         HorizontalOptions="Center">
+                <Label Text="Confirmed: "/>
+                <Label Text="{Binding WorklogConfirmed}"/>
+            </StackLayout>
         </StackLayout>
-        <Button HorizontalOptions="Center"
+        <StackLayout VerticalOptions="EndAndExpand">
+            <Button HorizontalOptions="Center"
+                Command="{Binding ConfirmTimesheetCommand}"
+                Text="Confirm"
+                IsVisible="{Binding ShowConfirm}"
+                VerticalOptions="EndAndExpand"/>
+            <Button HorizontalOptions="Center"
                 Text="Update"
-                VerticalOptions="EndAndExpand"
-                Command="{Binding UpdateTimesheetCommand}"/>
+                Command="{Binding UpdateTimesheetCommand}"
+                Margin="0, 0, 0, 10"/>
+        </StackLayout>
     </StackLayout>
 </ContentPage>

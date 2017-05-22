@@ -7,17 +7,20 @@
                     iOS="0,20,0,0"/>
     </ContentPage.Padding>
     <StackLayout>
+        <Image Source="logoBreedJPEG.jpg"
+               HorizontalOptions="Center"
+               Margin="0, 15, 0, 0"/>
         <Label Text="Home"
                HorizontalOptions="Center"
                HorizontalTextAlignment="Center"
                FontSize="Large"
-               Margin="0,5,0,10"/>
+               Margin="0,15,0,10"/>
         <StackLayout HorizontalOptions="Center">
             <Button Text="New timesheet"
                 HorizontalOptions="Start"
                 Command="{Binding NewTimesheetCommand}"/>
             <Button x:Name="btnViewTimesheets"
-                Text="Timesheets"
+                Text="View Timesheets"
                 HorizontalOptions="Start"
                 Command="{Binding ViewTimesheetCommand}"/>
         </StackLayout>
@@ -26,7 +29,8 @@
             <Button Text="Logout"
                     Command="{Binding LogoutCommand}"
                     BackgroundColor="White"
-                    TextColor="Black" />
+                    TextColor="Black" 
+                    Margin="0, 0, 0, 10"/>
         </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Timeskip.Services.Timesheet;
 using Timeskip.Tools;
+using Timeskip.API;
 
 namespace Timeskip.ViewModel
 {
@@ -43,12 +44,15 @@ namespace Timeskip.ViewModel
             tsService = new TSService();
             userService = new UserService();
             date = worklog.Day;
-            Hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes) / 60, 2);
+            hours = Math.Round(Convert.ToDecimal(worklog.LoggedMinutes) / 60, 2);
             UpdateTimesheetCommand = new Command(UpdateTimesheet);
             update = true;
-            SelectedOrganization = worklog.Activity.Project.Organization;
-            SelectedProject = worklog.Activity.Project;
-            selectedActivity = worklog.Activity;
+            if (worklog.Activity.Project != null && worklog.Activity.Project.Organization != null)
+            {
+                selectedOrganization = worklog.Activity.Project.Organization;
+                selectedProject = worklog.Activity.Project;
+                selectedActivity = worklog.Activity;
+            }
             this.worklog = worklog;
         }
         #endregion
@@ -165,11 +169,13 @@ namespace Timeskip.ViewModel
         {
             try
             {
-                bool valid = CheckOvertime();
-
+                bool valid = CheckMandatoryFields() && CheckOvertime();
                 var minutes = (long)Math.Round(hours * 60, 0);
                 if (valid && tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
-                    Popup.ShowPopupSuccess(hours + " logged for project: " + selectedProject);
+                {
+                    Popup.ShowPopupSuccess(hours + " hours logged for project: " + selectedProject.Name);
+                    Application.Current.MainPage = new NavigationPage(new StartPage.StartPage());
+                }
             }
             catch (Exception ex)
             {
@@ -181,7 +187,7 @@ namespace Timeskip.ViewModel
         {
             try
             {
-                bool valid = CheckOvertime();
+                bool valid = CheckMandatoryFields() && CheckOvertime();
                 var minutes = (long)Math.Round(hours * 60, 0);
                 if (valid && tsService.UpdateWorklog(worklog, minutes, string.Format("{0:yyyy-MM-dd}", date), selectedOrganization, selectedProject, selectedActivity))
                 {
@@ -189,7 +195,7 @@ namespace Timeskip.ViewModel
                     Application.Current.MainPage = new NavigationPage(new StartPage.StartPage());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Popup.ShowPopupError(ex.Message);
             }
@@ -197,7 +203,6 @@ namespace Timeskip.ViewModel
 
         private decimal DefaultHours()
         {
-            //todo: nog checken of de user op de huidige dag werkt
             try
             {
                 return Convert.ToDecimal(userService.CurrentUserInfo().DefaultHoursPerDay);
@@ -215,6 +220,17 @@ namespace Timeskip.ViewModel
             {
                 Popup.ShowPopupError("No overtime allowed for selected project");
                 Hours = DefaultHours();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckMandatoryFields()
+        {
+            if(selectedOrganization == null || selectedProject == null || selectedActivity == null)
+            {
+                Popup.ShowPopupError("Please fill in all fields");
                 return false;
             }
 
