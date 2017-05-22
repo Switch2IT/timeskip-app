@@ -166,8 +166,7 @@ namespace Timeskip.ViewModel
         {
             try
             {
-                bool valid = CheckOvertime();
-
+                bool valid = CheckMandatoryFields() && CheckOvertime();
                 var minutes = (long)Math.Round(hours * 60, 0);
                 if (valid && tsService.PostWorklog(selectedOrganization, selectedProject, selectedActivity, minutes, string.Format("{0:yyyy-MM-dd}", date)))
                 {
@@ -185,7 +184,7 @@ namespace Timeskip.ViewModel
         {
             try
             {
-                bool valid = CheckOvertime();
+                bool valid = CheckMandatoryFields() && CheckOvertime();
                 var minutes = (long)Math.Round(hours * 60, 0);
                 if (valid && tsService.UpdateWorklog(worklog, minutes, string.Format("{0:yyyy-MM-dd}", date), selectedOrganization, selectedProject, selectedActivity))
                 {
@@ -218,6 +217,17 @@ namespace Timeskip.ViewModel
             {
                 Popup.ShowPopupError("No overtime allowed for selected project");
                 Hours = DefaultHours();
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool CheckMandatoryFields()
+        {
+            if(selectedOrganization == null || selectedProject == null || selectedActivity == null)
+            {
+                Popup.ShowPopupError("Please fill in all fields");
                 return false;
             }
 

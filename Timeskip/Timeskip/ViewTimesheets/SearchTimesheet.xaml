@@ -51,6 +51,7 @@
         <Button HorizontalOptions="Center"
                 VerticalOptions="EndAndExpand"
                 Text="Search"
-                Command="{Binding SearchTimesheetCommand}"/>
+                Command="{Binding SearchTimesheetCommand}"
+                Margin="0, 0, 0, 10"/>
     </StackLayout>
 </ContentPage>

@@ -50,6 +50,7 @@
         <Button HorizontalOptions="Center"
                 Text="Update"
                 VerticalOptions="EndAndExpand"
-                Command="{Binding UpdateTimesheetCommand}"/>
+                Command="{Binding UpdateTimesheetCommand}"
+                Margin="0, 0, 0, 10"/>
     </StackLayout>
 </ContentPage>

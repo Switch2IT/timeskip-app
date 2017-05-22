@@ -2156,7 +2156,7 @@ namespace Timeskip.Droid
 			public const int icon = 2130837649;
 			
 			// aapt resource value: 0x7f020092
-			public const int logoBreedPNG = 2130837650;
+			public const int logoBreedJPEG = 2130837650;
 			
 			// aapt resource value: 0x7f020093
 			public const int logoJPEG = 2130837651;

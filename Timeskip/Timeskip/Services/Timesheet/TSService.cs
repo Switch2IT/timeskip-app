@@ -114,6 +114,22 @@ namespace Timeskip.Services.Timesheet
                     Popup.ShowPopupError("User not assigned to project: " + errorMessage);
                     return false;
                 }
+                if(ex.ErrorCode == 400)
+                {
+                    var json = JObject.Parse(ex.ErrorContent);
+                    string errorCode = json["errorCode"];
+                    if (errorCode == "3000")
+                    {
+                        Popup.ShowPopupError("No overtime allowed for project: " + project.Name);
+                        return false;
+                    }
+                    else
+                    {
+                        string message = json["message"];
+                        Popup.ShowPopupError(message);
+                        return false;
+                    }
+                }
 
                 Popup.ShowPopupError(ex.Message);
                 return false;
