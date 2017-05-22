@@ -171,25 +171,37 @@ namespace Timeskip.Services.Timesheet
         {
             try
             {
-                List<WorklogResponse> worklogs = new List<WorklogResponse>();
-
-                var client = new HttpClient();
-                var path = string.Format(Properties.Resources.SwaggerUrl + "/users/current/worklogs?from={0}&to={1}", string.Format("{0:yyyy-MM-dd}", from), string.Format("{0:yyyy-MM-dd}", to));
-                client.Timeout = new TimeSpan(0, 0, 5);
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + App.Token);
-                var request = client.GetAsync(path);
-                var result = request.Result;
-                string content = result.Content.ReadAsStringAsync().Result;
-                var json = JArray.Parse(content);
-                foreach (var worklog in json)
+                if (organization != null)
                 {
-                    var project = AllProjects(organization).Where(p => p.Id == Convert.ToInt64(worklog["activity"]["project"]["id"])).FirstOrDefault();
-                    var activity = new ActivityResponse(Convert.ToInt64(worklog["activity"]["id"]), worklog["activity"]["name"].ToString(), worklog["activity"]["description"].ToString(), Convert.ToBoolean(worklog["activity"]["billable"].ToString()), project);
-                    var workLogLocal = new WorklogResponse(Convert.ToInt32(worklog["id"]), worklog["userId"].ToString(), activity, Convert.ToDateTime(worklog["day"]), Convert.ToInt32(worklog["loggedMinutes"]), Convert.ToBoolean(worklog["confirmed"]));
-                    worklogs.Add(workLogLocal);
-                }
+                    List<WorklogResponse> worklogs = new List<WorklogResponse>();
 
-                return worklogs.OrderByDescending(w => w.Day).ToList();
+                    var client = new HttpClient();
+                    var path = string.Format(Properties.Resources.SwaggerUrl + "/users/current/worklogs?from={0}&to={1}", string.Format("{0:yyyy-MM-dd}", from), string.Format("{0:yyyy-MM-dd}", to));
+                    client.Timeout = new TimeSpan(0, 0, 5);
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + App.Token);
+                    var request = client.GetAsync(path);
+                    var result = request.Result;
+                    string content = result.Content.ReadAsStringAsync().Result;
+                    var json = JArray.Parse(content);
+                    foreach (var worklog in json)
+                    {
+                        var organizationLocal = OrgApi.GetOrgApi().GetOrganization(worklog["activity"]["project"]["organization"]["id"].ToString());
+                        if (organizationLocal.Id == organization.Id)
+                        {
+                            var project = AllProjects(organization).Where(p => p.Id == Convert.ToInt64(worklog["activity"]["project"]["id"])).FirstOrDefault();
+                            if (project != null)
+                            {
+                                var activity = new ActivityResponse(Convert.ToInt64(worklog["activity"]["id"]), worklog["activity"]["name"].ToString(), worklog["activity"]["description"].ToString(), Convert.ToBoolean(worklog["activity"]["billable"].ToString()), project);
+                                var workLogLocal = new WorklogResponse(Convert.ToInt32(worklog["id"]), worklog["userId"].ToString(), activity, Convert.ToDateTime(worklog["day"]), Convert.ToInt32(worklog["loggedMinutes"]), Convert.ToBoolean(worklog["confirmed"]));
+                                worklogs.Add(workLogLocal);
+                            }
+                        }
+                    }
+
+                    return worklogs.OrderByDescending(w => w.Day).ToList();
+                }
+                else
+                    return new List<WorklogResponse>();
             }
             catch (ApiException ex)
             {
