@@ -39,5 +39,11 @@
                 HorizontalOptions="Center"
                 Margin="0,40,0,0"
                 Command="{Binding LoginCommand}"/>
+        <ActivityIndicator IsVisible="{Binding Loading}" 
+                           IsRunning="True" Color="Black" 
+                           IsEnabled="{Binding Loading}"
+                           VerticalOptions="EndAndExpand"
+                           HeightRequest="10"
+                           WidthRequest="10"/>
     </StackLayout>
 </ContentPage>

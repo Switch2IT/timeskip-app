@@ -188,7 +188,7 @@ namespace Timeskip.Services.Timesheet
                         var organizationLocal = OrgApi.GetOrgApi().GetOrganization(worklog["activity"]["project"]["organization"]["id"].ToString());
                         if (organizationLocal.Id == organization.Id)
                         {
-                            var project = AllProjects(organization).Where(p => p.Id == Convert.ToInt64(worklog["activity"]["project"]["id"])).FirstOrDefault();
+                            var project = OrgApi.GetOrgApi().GetProject(organization.Id, Convert.ToInt64(worklog["activity"]["project"]["id"]));
                             if (project != null)
                             {
                                 var activity = new ActivityResponse(Convert.ToInt64(worklog["activity"]["id"]), worklog["activity"]["name"].ToString(), worklog["activity"]["description"].ToString(), Convert.ToBoolean(worklog["activity"]["billable"].ToString()), project);

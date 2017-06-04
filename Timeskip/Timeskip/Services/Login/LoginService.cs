@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text;
 using Xamarin.Forms;
 using Timeskip.Tools;
+using Timeskip.ViewModel;
+using Timeskip.API;
 
 namespace Timeskip.Services.Login
 {
@@ -14,19 +16,24 @@ namespace Timeskip.Services.Login
         private int refreshExpire;
         #endregion
         #region Login + RefreshToken
-        public bool Login(string username, string password)
+        public string Login(string username, string password)
         {
             try
             {
+                if (string.IsNullOrEmpty(username))
+                    return "Empty username field";
+
+                if (string.IsNullOrEmpty(password))
+                    return "Empty password field";
+
                 var client = new HttpClient();
                 var content = string.Format("grant_type=password&client_id=timeskip&username={0}&password={1}", username, password);
                 client.Timeout = new TimeSpan(0, 0, 5);
                 var response = client.PostAsync(Properties.Resources.KeyCloakTokenUrl, new StringContent(content, Encoding.UTF8, "application/x-www-form-urlencoded")).Result;
 
-                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                if (!response.IsSuccessStatusCode)
                 {
-                    Popup.ShowPopupError("Login error", "Username or password incorrect");
-                    return false;
+                    return "Username or password incorrect";
                 }
 
                 string result = response.Content.ReadAsStringAsync().Result;
@@ -46,22 +53,20 @@ namespace Timeskip.Services.Login
                     }
                     else return false;
                 });
-                return true;
+
+                return string.Format("Hello {0}", UserApi.GetUserApi().GetCurrentUser().FirstName);
             }
             catch (AggregateException)
             {
-                Popup.ShowPopupError("Could not connect to login server");
-                return false;
+                return "Could not connect to login server";
             }
             catch (WebException ex)
             {
-                Popup.ShowPopupError(ex.Message);
-                return false;
+                return ex.Message;
             }
             catch (Exception ex)
             {
-                Popup.ShowPopupError(ex.Message);
-                return false;
+                return ex.Message;
             }
         }
 

@@ -4,6 +4,8 @@ using Xamarin.Forms;
 using Timeskip.Services.Login;
 using Timeskip.Tools;
 using System;
+using System.Threading.Tasks;
+using Timeskip.API;
 
 namespace Timeskip.ViewModel
 {
@@ -15,6 +17,7 @@ namespace Timeskip.ViewModel
         private string username;
         private string password;
         ILoginService loginService;
+        private bool loading = false;
         #endregion
 
         public LoginPageViewModel()
@@ -50,23 +53,40 @@ namespace Timeskip.ViewModel
             }
         }
 
+        public bool Loading
+        {
+            get => loading;
+            set
+            {
+                if (loading != value)
+                {
+                    loading = value;
+                    OnPropertyChanged("Loading");
+                }
+            }
+        }
+
         public ICommand LoginCommand { get; private set; }
         #endregion
 
-        private void Login()
+        private async void Login()
         {
             try
             {
-                if (string.IsNullOrEmpty(username))
-                    Popup.ShowPopupError("", "Empty username field");
-                else if (string.IsNullOrEmpty(password))
-                    Popup.ShowPopupError("", "Empty password field");
-                else if (loginService.Login(username, password))
-                    Popup.ShowPopupSuccess("", string.Format("{0} logged in", username), "OK");
+                Loading = true;
+                string message = await Task.Run(() => loginService.Login(username, password));
+                if (!message.StartsWith("Hello"))
+                    Popup.ShowPopupError("Login Error", message);
+                else
+                    Popup.ShowPopupSuccess(message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Popup.ShowPopupError(ex.Message);
+            }
+            finally
+            {
+                Loading = false;
             }
         }
 
