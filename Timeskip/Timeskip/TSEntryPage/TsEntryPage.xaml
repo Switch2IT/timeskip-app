@@ -18,7 +18,7 @@
                    FontSize="Medium"
                    VerticalTextAlignment="Center"
                    HorizontalTextAlignment="Center"/>
-            <DatePicker Date="{Binding Date, Mode=TwoWay, StringFormat='{0:dd/MM/yyyy}'}"
+            <DatePicker Date="{Binding Date, Mode=TwoWay}"
                         HorizontalOptions="Center"/>
         </StackLayout>
         <StackLayout Orientation="Horizontal"
