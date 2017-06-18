@@ -75,11 +75,20 @@ namespace Timeskip.Services.Timesheet
         {
             try
             {
-                var response = OrgApi.GetOrgApi().ListOrganizationsWithHttpInfo();
+                var organisations = new List<OrganizationResponse>();
+                var response = UserApi.GetUserApi().ListUserMembershipsWithHttpInfo(UserApi.GetUserApi().GetCurrentUser().Id);
+                
                 if (response.StatusCode == 200)
-                    return response.Data;
+                {
+                    foreach (var organisation in response.Data)
+                    {
+                        organisations.Add(OrgApi.GetOrgApi().GetOrganization(organisation.OrganizationId));
+                    }
+                }
                 else
                     throw new ApiException();
+
+                return organisations;
             }
             catch (ApiException ex)
             {
@@ -157,6 +166,22 @@ namespace Timeskip.Services.Timesheet
             }
             catch (ApiException ex)
             {
+                if(ex.ErrorCode == 404)
+                {
+                    var json = JObject.Parse(ex.ErrorContent);
+                    string errorCode = json["errorCode"];
+                    if (errorCode == "6004")
+                    {
+                        Popup.ShowPopupError("Activity not found");
+                        return false;
+                    }
+                    else
+                    {
+                        string message = json["message"];
+                        Popup.ShowPopupError(message);
+                        return false;
+                    }
+                }
                 Popup.ShowPopupError(ex.Message);
                 return false;
             }
@@ -188,7 +213,7 @@ namespace Timeskip.Services.Timesheet
                         var organizationLocal = OrgApi.GetOrgApi().GetOrganization(worklog["activity"]["project"]["organization"]["id"].ToString());
                         if (organizationLocal.Id == organization.Id)
                         {
-                            var project = AllProjects(organization).Where(p => p.Id == Convert.ToInt64(worklog["activity"]["project"]["id"])).FirstOrDefault();
+                            var project = OrgApi.GetOrgApi().GetProject(organization.Id, Convert.ToInt64(worklog["activity"]["project"]["id"]));
                             if (project != null)
                             {
                                 var activity = new ActivityResponse(Convert.ToInt64(worklog["activity"]["id"]), worklog["activity"]["name"].ToString(), worklog["activity"]["description"].ToString(), Convert.ToBoolean(worklog["activity"]["billable"].ToString()), project);

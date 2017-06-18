@@ -1,7 +1,9 @@
-﻿namespace Timeskip.Services.Login
+﻿using Timeskip.ViewModel;
+
+namespace Timeskip.Services.Login
 {
     interface ILoginService
     {
-        bool Login(string username, string password);
+        string Login(string username, string password);
     }
 }
